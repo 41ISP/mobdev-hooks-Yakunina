@@ -1,9 +1,9 @@
 import "./Header.css"
 
-const Header = () => {
+const Header = ({setCollapsed}) => {
     return (
         <header className="topbar">
-            <button
+            <button onClick={() => setCollapsed(collapsed => !collapsed)}
                 className="icon-btn"
                 id="sidebarToggle"
                 title="Collapse sidebar"
