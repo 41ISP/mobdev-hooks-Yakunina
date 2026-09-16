@@ -1,11 +1,18 @@
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import TaskRow from "../../components/TaskRow"
 import { nanoid } from "nanoid"
 
 const PageBoard = () => {
     const [taskField, setTaskField] = useState('')
-
     const[tasks, setTasks] = useState([])
+    const [shownTasks, setShownTasks] = useState(tasks)
+    const [showCompleted, setShowCompleted] = useState(false)
+
+    useEffect(() => {
+        showCompleted ? setShownTasks(tasks.filter(el => el.done)) 
+        : setShownTasks(tasks)
+
+    },[tasks, showCompleted])
 
     const handleSubmit = (e) => {    
         e.preventDefault()
@@ -34,15 +41,15 @@ const PageBoard = () => {
                 data-hook="3.1 useState + useEffect (fetch on mount)">
                 <div className="mount-point stats-row" id="mount-stats">
                     <div className="stat-card">
-                        <div className="stat-value">24</div>
+                        <div className="stat-value">{tasks.length}</div>
                         <div className="stat-label">Open</div>
                     </div>
                     <div className="stat-card">
-                        <div className="stat-value">9</div>
+                        <div className="stat-value">{tasks.filter(el => !el.done).length}</div>
                         <div className="stat-label">In progress</div>
                     </div>
                     <div className="stat-card">
-                        <div className="stat-value">61</div>
+                        <div className="stat-value">{tasks.filter(el => el.done).length}</div>
                         <div className="stat-label">Done this sprint</div>
                     </div>
                     <div className="stat-card">
@@ -57,7 +64,8 @@ const PageBoard = () => {
                     <div
                         className="mount-point switch-row"
                         id="mount-show-completed">
-                        <span className="switch"></span>
+                        <span onClick={() => setShowCompleted(o => !o)}
+                         className={`switch${ showCompleted ? " on" : ""}`}></span>
                         <span>Show completed tasks</span>
                     </div>
                 </div>
@@ -80,7 +88,7 @@ const PageBoard = () => {
                     </form>
                     <div className="task-list">
                        
-                        {tasks.map((task, i) => <TaskRow {...task} key ={i} setTasks={setTasks} />)}
+                        {shownTasks.map((task, i) => <TaskRow {...task} key ={i} setTasks={setTasks} />)}
 
                     </div>
                 </div>
